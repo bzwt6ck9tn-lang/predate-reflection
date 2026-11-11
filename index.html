@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light" />
+  <title>考慮拍拖前的個人反思</title>
+  <style>
+    :root {
+      --ink: #2a2a2a;
+      --muted: #5a5a5a;
+      --navy: #2c3e50;
+      --teal: #1f5c4d;
+      --teal-soft: #e8f1ee;
+      --line: #d7e2de;
+      --paper: #fffcf7;
+      --page: #f3efe6;
+      --white: #ffffff;
+      --danger: #8a3b32;
+      --radius: 14px;
+      --shadow: 0 1px 2px rgba(44, 62, 80, 0.06), 0 8px 24px rgba(44, 62, 80, 0.05);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Noto Serif CJK TC", "Source Han Serif TC", "Songti TC", "PMingLiU", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", serif;
+      background: var(--page);
+      color: var(--ink);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 28px 18px 120px;
+    }
+    header.hero {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px 24px 22px;
+      box-shadow: var(--shadow);
+    }
+    .eyebrow {
+      font-family: "Noto Sans CJK TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      color: var(--teal);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      margin: 0 0 8px;
+    }
+    h1 {
+      font-family: "Noto Sans CJK TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      font-size: 1.7rem;
+      line-height: 1.3;
+      color: var(--navy);
+      margin: 0 0 10px;
+      font-weight: 700;
+    }
+    .lead, .note, label, .meta, button, .progress, .toast, .saved {
+      font-family: "Noto Sans CJK TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    }
+    .lead { margin: 0 0 14px; color: var(--ink); font-size: 15.5px; }
+    .note {
+      background: var(--teal-soft);
+      border-left: 4px solid var(--teal);
+      border-radius: 0 10px 10px 0;
+      padding: 12px 14px;
+      color: var(--navy);
+      font-size: 14px;
+      margin: 0;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: end;
+      margin: 18px 0 0;
+    }
+    .field { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 200px; }
+    label { font-size: 13px; font-weight: 600; color: var(--navy); }
+    input[type="text"], textarea {
+      width: 100%;
+      font-size: 16px;
+      font-family: inherit;
+      color: var(--ink);
+      background: var(--white);
+      border: 1px solid #c9d5d0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    input[type="text"]:focus, textarea:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(31, 92, 77, 0.15);
+    }
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+    .progress {
+      margin: 16px 2px 8px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .bar {
+      height: 6px;
+      background: #e3e8e5;
+      border-radius: 99px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .bar > span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: var(--teal);
+      border-radius: 99px;
+      transition: width .25s ease;
+    }
+    section.block {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px 20px 8px;
+      margin-top: 16px;
+      box-shadow: var(--shadow);
+    }
+    section.block h2 {
+      font-family: "Noto Sans CJK TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      font-size: 1.05rem;
+      color: var(--teal);
+      margin: 0 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hint {
+      font-family: "Noto Sans CJK TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      font-size: 14px;
+      color: var(--navy);
+      margin: 0 0 14px;
+      line-height: 1.65;
+    }
+    .tests { list-style: none; margin: 0 0 18px; padding: 0; }
+    .tests li {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin: 0 0 8px;
+    }
+    .tests a {
+      font-family: "Noto Sans CJK TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      color: var(--teal);
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(31, 92, 77, 0.35);
+    }
+    .tests a:hover { border-bottom-color: var(--teal); }
+    .tests .desc {
+      display: block;
+      font-family: "Noto Sans CJK TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .tests .tag {
+      font-family: "Noto Sans CJK TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--teal);
+      letter-spacing: 0.04em;
+      margin-right: 6px;
+    }
+    .q { margin: 0 0 18px; }
+    .q p {
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+    .q .num {
+      font-family: "Noto Sans CJK TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      color: var(--teal);
+      font-weight: 700;
+      margin-right: 4px;
+    }
+    .actions {
+      position: sticky;
+      bottom: 0;
+      z-index: 5;
+      background: rgba(243, 239, 230, 0.92);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--line);
+      padding: 12px 18px calc(14px + env(safe-area-inset-bottom));
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+    button {
+      appearance: none;
+      border: 1px solid var(--teal);
+      background: var(--teal);
+      color: #fff;
+      font-size: 14.5px;
+      font-weight: 600;
+      padding: 10px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    button.secondary {
+      background: var(--white);
+      color: var(--teal);
+    }
+    button.ghost {
+      background: transparent;
+      color: var(--danger);
+      border-color: #e3c4c0;
+    }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .saved, .toast {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 92px;
+      transform: translateX(-50%) translateY(12px);
+      background: var(--navy);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 999px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s, transform .2s;
+      z-index: 10;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    footer.fine {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 22px;
+    }
+    @media print {
+      body { background: #fff; }
+      .actions, .toolbar button, .note, .toast { display: none !important; }
+      .wrap { padding: 0; }
+      header.hero, section.block { box-shadow: none; border-color: #ddd; break-inside: avoid; }
+      textarea { border: none; padding: 0; min-height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <p class="eyebrow">給正在考慮開始拍拖的人</p>
+      <h1>考慮拍拖前的個人反思</h1>
+      <p class="lead">這份問題給正在考慮開始拍拖的人個人填寫，對方看不到你的答案。約見時牧者會與你一同同行，不是審問。按真實體會作答即可，不必寫得很長。</p>
+      <p class="note">請用自己的手機或電腦填寫。答案只保存在你這部裝置，不會自動上傳。請先完成下面的反思，再各自做測驗，把結果寫在同一份表單裡。填完後，用「複製全部回答」或「下載文字檔」，一次過只傳給傳道（不必傳給對方），傳道便可以約你跟進。</p>
+      <div class="toolbar">
+        <div class="field">
+          <label for="name">你的名字</label>
+          <input id="name" type="text" autocomplete="name" placeholder="例如：小明" />
+        </div>
+      </div>
+      <div class="progress">已填 <span id="done">0</span> / <span id="total">0</span> 題<div class="bar"><span id="bar"></span></div></div>
+      <p class="saved" id="saved"></p>
+    </header>
+
+    <section class="block" data-section="動機同時機">
+      <h2>動機同時機</h2>
+      <div class="q" data-id="q1">
+        <p><span class="num">1.</span>你現在考慮拍拖，最主要是因為什麼？是想認識這個人，還是想有一段關係？</p>
+        <textarea rows="4"></textarea>
+      </div>
+      <div class="q" data-id="q2">
+        <p><span class="num">2.</span>學業、家庭、事奉現在的節奏，有沒有足夠空間開始一段關係？</p>
+        <textarea rows="4"></textarea>
+      </div>
+      <div class="q" data-id="q3">
+        <p><span class="num">3.</span>如果現在不開始，你最擔心失去的是什麼？</p>
+        <textarea rows="4"></textarea>
+      </div>
+    </section>
+
+    <section class="block" data-section="信仰同行">
+      <h2>信仰同行</h2>
+      <div class="q" data-id="q4">
+        <p><span class="num">4.</span>你和主現在實際的關係是怎樣的？（禱告、讀經、團契，不是理想狀態。）</p>
+        <textarea rows="4"></textarea>
+      </div>
+      <div class="q" data-id="q5">
+        <p><span class="num">5.</span>對方是不是信徒？若還不肯定，你怎樣看這段可能開始的關係的方向？</p>
+        <textarea rows="4"></textarea>
+      </div>
+      <div class="q" data-id="q6">
+        <p><span class="num">6.</span>你希望兩個人一起怎樣追求神？若這段關係令你遠離神、教會或屬靈同伴，你會怎樣處理？</p>
+        <textarea rows="4"></textarea>
+      </div>
+      <div class="q" data-id="q7">
+        <p><span class="num">7.</span>若你們返同一團契或一同事奉，開始拍拖會怎樣影響你們在群體中的相處與服事？</p>
+        <textarea rows="4"></textarea>
+      </div>
+    </section>
+
+    <section class="block" data-section="認識自己與對方">
+      <h2>認識自己與對方</h2>
+      <div class="q" data-id="q8">
+        <p><span class="num">8.</span>你欣賞對方哪三樣品格（不是外形或感覺）？還有哪些地方未清楚，或心裡有保留？</p>
+        <textarea rows="4"></textarea>
+      </div>
+      <div class="q" data-id="q9">
+        <p><span class="num">9.</span>你遇壓力、衝突、金錢與時間分配時，通常怎樣處理？你見過對方怎樣處理嗎？</p>
+        <textarea rows="4"></textarea>
+      </div>
+      <div class="q" data-id="q10">
+        <p><span class="num">10.</span>父母／家人知不知道你在考慮這段關係？他們怎樣看？</p>
+        <textarea rows="4"></textarea>
+      </div>
+    </section>
+
+    <section class="block" data-section="界線、責任與前景">
+      <h2>界線、責任與前景</h2>
+      <div class="q" data-id="q11">
+        <p><span class="num">11.</span>你怎樣理解拍拖的目的？是朝婚姻去認真認識嗎？</p>
+        <textarea rows="4"></textarea>
+      </div>
+      <div class="q" data-id="q12">
+        <p><span class="num">12.</span>身體、情緒、網絡界線（例如深宵傾談、單獨相處）你打算怎樣守？有誰可以老實問責？</p>
+        <textarea rows="4"></textarea>
+      </div>
+      <div class="q" data-id="q13">
+        <p><span class="num">13.</span>若開始後發現不合適，你知道怎樣有尊嚴、有愛心地停下來，並在教會／團契中好好相處嗎？（尤其當你們仍在同一群體時）</p>
+        <textarea rows="4"></textarea>
+      </div>
+      <div class="q" data-id="q14">
+        <p><span class="num">14.</span>畢業後的方向（進修、工作、居住、教會）你自己有什麼打算？有沒有和對方談過？</p>
+        <textarea rows="4"></textarea>
+      </div>
+      <div class="q" data-id="q15">
+        <p><span class="num">15.</span>你願意慢慢認識，還是已經覺得很急？覺得現在的步伐怎樣？</p>
+        <textarea rows="4"></textarea>
+      </div>
+    </section>
+
+    <section class="block" data-section="心理測驗與跟進">
+      <h2>心理測驗與跟進</h2>
+      <p class="hint">測驗是幫助認識自己，不是用來判決合不合適。請用自己的裝置完成。做完後把重點寫在下面，連同整份反思一次過傳給傳道，方便約跟進。</p>
+      <ul class="tests">
+        <li>
+          <span class="tag">建議先做</span>
+          <a href="https://bigfive-test.com/zh-hant" target="_blank" rel="noopener">五大人格測驗（繁中，免費）</a>
+          <span class="desc">約 10 分鐘、120 題。測開放性、盡責性、外向性、宜人性、情緒穩定性。最接近性格特質對照。</span>
+        </li>
+        <li>
+          <span class="tag">較輕鬆</span>
+          <a href="https://www.16personalities.com/tw/性格測驗" target="_blank" rel="noopener">16Personalities 免費人格測試（繁中）</a>
+          <span class="desc">較淺白、許多人較熟。屬類型測驗，適宜打開傾談，嚴謹度不如五大人格。</span>
+        </li>
+        <li>
+          <span class="tag">可選</span>
+          <a href="https://5lovelanguages.com/quizzes/love-language" target="_blank" rel="noopener">官方愛之語測驗</a>
+          <span class="desc">目前主要是英文。了解自己較能感受到愛的方式。</span>
+        </li>
+      </ul>
+      <div class="q" data-id="q16">
+        <p><span class="num">16.</span>五大人格結果：請簡述五個向度的傾向，或貼上你覺得重要的幾句。（建議填寫）</p>
+        <textarea rows="5" placeholder="例如：開放性偏高、盡責性中等、外向性偏低、宜人性偏高、情緒較穩定……"></textarea>
+      </div>
+      <div class="q" data-id="q17">
+        <p><span class="num">17.</span>若有做 16Personalities，你的類型是？（可不填）</p>
+        <textarea rows="2" placeholder="例如：INFJ"></textarea>
+      </div>
+      <div class="q" data-id="q18">
+        <p><span class="num">18.</span>若有做愛之語或其他測驗，請簡述重點。（可不填）</p>
+        <textarea rows="4"></textarea>
+      </div>
+      <div class="q" data-id="q19">
+        <p><span class="num">19.</span>你最想在約見中談的一點是什麼？（可不填）</p>
+        <textarea rows="3"></textarea>
+      </div>
+      <div class="q" data-id="q20">
+        <p><span class="num">20.</span>方便傳道約你跟進的時段？（例如：平日晚上、主日崇拜後，或哪幾天較方便）</p>
+        <textarea rows="2" placeholder="例如：週三、週五晚上 8 時後，或主日下午"></textarea>
+      </div>
+    </section>
+
+    <footer class="fine">僅供牧養約見使用  ·  答案只存在你的裝置，除非你自行複製或下載</footer>
+  </div>
+
+  <div class="actions">
+    <button type="button" id="copyBtn" class="secondary">複製全部回答</button>
+    <button type="button" id="downloadBtn">下載文字檔</button>
+    <button type="button" id="clearBtn" class="ghost">清除此份</button>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    (function () {
+      const STORAGE_PREFIX = "pastoral-reflection-predate-v1:";
+      const nameInput = document.getElementById("name");
+      const questions = Array.from(document.querySelectorAll(".q"));
+      const requiredIds = questions.map(q => q.dataset.id).filter(id => !["q16","q17","q18","q19","q20"].includes(id));
+      const doneEl = document.getElementById("done");
+      const totalEl = document.getElementById("total");
+      const barEl = document.getElementById("bar");
+      const savedEl = document.getElementById("saved");
+      const toastEl = document.getElementById("toast");
+      totalEl.textContent = String(requiredIds.length);
+
+      function key() {
+        const name = (nameInput.value || "").trim() || "_未署名";
+        return STORAGE_PREFIX + name;
+      }
+
+      function collect() {
+        const data = { name: (nameInput.value || "").trim(), answers: {}, savedAt: new Date().toISOString() };
+        questions.forEach(q => {
+          data.answers[q.dataset.id] = (q.querySelector("textarea").value || "");
+        });
+        return data;
+      }
+
+      function apply(data) {
+        if (!data) return;
+        questions.forEach(q => {
+          const ta = q.querySelector("textarea");
+          ta.value = (data.answers && data.answers[q.dataset.id]) || "";
+        });
+      }
+
+      function filledCount() {
+        return requiredIds.filter(id => {
+          const q = document.querySelector('.q[data-id="' + id + '"]');
+          return q && (q.querySelector("textarea").value || "").trim().length > 0;
+        }).length;
+      }
+
+      function updateProgress() {
+        const n = filledCount();
+        doneEl.textContent = String(n);
+        barEl.style.width = Math.round((n / requiredIds.length) * 100) + "%";
+      }
+
+      function formatTime(iso) {
+        try {
+          const d = new Date(iso);
+          return d.toLocaleString("zh-HK", { hour12: false });
+        } catch (e) { return ""; }
+      }
+
+      function save() {
+        const data = collect();
+        try {
+          localStorage.setItem(key(), JSON.stringify(data));
+          savedEl.textContent = data.name
+            ? "已儲存在這部裝置（" + data.name + "）· " + formatTime(data.savedAt)
+            : "已暫存於這部裝置。填上名字後，回答會按你的名字分開保存。";
+        } catch (e) {
+          savedEl.textContent = "此裝置未能自動儲存，請用複製或下載保存你的回答。";
+        }
+        updateProgress();
+      }
+
+      function loadForName() {
+        try {
+          const raw = localStorage.getItem(key());
+          if (raw) {
+            apply(JSON.parse(raw));
+            const data = JSON.parse(raw);
+            savedEl.textContent = "已載入" + (data.name ? " " + data.name + " " : "") + "先前在這部裝置的填寫" + (data.savedAt ? "（" + formatTime(data.savedAt) + "）" : "") + "。";
+          } else {
+            questions.forEach(q => { q.querySelector("textarea").value = ""; });
+            savedEl.textContent = nameInput.value.trim()
+              ? "這是一份新的填寫，輸入時會自動保存在這部裝置。"
+              : "請先填上你的名字，回答會按名字分開保存，同一部裝置也不會與對方混在一起。";
+          }
+        } catch (e) {
+          savedEl.textContent = "";
+        }
+        updateProgress();
+      }
+
+      function exportText() {
+        const data = collect();
+        const lines = [];
+        lines.push("考慮拍拖前的個人反思");
+        lines.push("給正在考慮開始拍拖的人");
+        lines.push("姓名：" + (data.name || "（未填）"));
+        lines.push("填寫時間：" + formatTime(data.savedAt));
+        lines.push("");
+        document.querySelectorAll("section.block").forEach(sec => {
+          lines.push("【" + sec.dataset.section + "】");
+          sec.querySelectorAll(".q").forEach(q => {
+            const title = (q.querySelector("p").innerText || "").replace(/\s+/g, " ").trim();
+            const ans = (q.querySelector("textarea").value || "").trim() || "（未填）";
+            lines.push(title);
+            lines.push(ans);
+            lines.push("");
+          });
+        });
+        lines.push("——");
+        lines.push("此份為考慮拍拖前的個人反思與測驗結果，僅傳給傳道作約見及跟進之用。");
+        return lines.join("\n");
+      }
+
+      let toastTimer;
+      function toast(msg) {
+        toastEl.textContent = msg;
+        toastEl.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2200);
+      }
+
+      nameInput.addEventListener("change", loadForName);
+      nameInput.addEventListener("blur", loadForName);
+      document.addEventListener("input", function (e) {
+        if (e.target && (e.target.id === "name" || e.target.tagName === "TEXTAREA")) save();
+      });
+
+      document.getElementById("copyBtn").addEventListener("click", async function () {
+        const text = exportText();
+        try {
+          await navigator.clipboard.writeText(text);
+          toast("已複製全部回答，請只傳給傳道以便約跟進");
+        } catch (e) {
+          window.prompt("請複製以下內容：", text);
+        }
+      });
+
+      document.getElementById("downloadBtn").addEventListener("click", function () {
+        const text = exportText();
+        const name = (nameInput.value || "").trim() || "未署名";
+        const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "考慮拍拖前的個人反思_" + name + ".txt";
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        toast("已下載文字檔");
+      });
+
+      document.getElementById("clearBtn").addEventListener("click", function () {
+        if (!window.confirm("確定清除此名字在這部裝置上的填寫？此動作不能復原。")) return;
+        try { localStorage.removeItem(key()); } catch (e) {}
+        questions.forEach(q => { q.querySelector("textarea").value = ""; });
+        updateProgress();
+        savedEl.textContent = "已清除此份填寫。";
+        toast("已清除");
+      });
+
+      try {
+        const last = localStorage.getItem(STORAGE_PREFIX + "__lastName");
+        if (last) nameInput.value = last;
+      } catch (e) {}
+      nameInput.addEventListener("input", function () {
+        try { localStorage.setItem(STORAGE_PREFIX + "__lastName", nameInput.value); } catch (e) {}
+      });
+      loadForName();
+    })();
+  </script>
+</body>
+</html>
